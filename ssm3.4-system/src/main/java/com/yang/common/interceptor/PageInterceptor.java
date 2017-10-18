@@ -27,7 +27,7 @@ import com.yang.common.tools.json.GsonUtils;
  * 分页拦截器
  * @author HP
  */
-@Intercepts({@Signature(type = StatementHandler.class, method = "prepare", args = {Connection.class})})
+@Intercepts({@Signature(type = StatementHandler.class, method = "prepare", args = {Connection.class, Integer.class})})
 public class PageInterceptor implements Interceptor {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
