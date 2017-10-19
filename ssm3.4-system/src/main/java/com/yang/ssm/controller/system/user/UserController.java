@@ -6,9 +6,9 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,8 +27,8 @@ import com.yang.ssm.service.UserService;
 
 @Controller
 @RequestMapping("system/user")
+@Slf4j
 public class UserController {
-	private final Logger logger = LoggerFactory.getLogger(getClass());
 	
 	private final String ROOT_URL = "system/user/";
 	
@@ -41,7 +41,7 @@ public class UserController {
 	@RequestMapping("userList.do")
 	public String userList(Model model, HttpServletRequest request, String userId){
 		String message = "用户列表";
-		logger.info(PlatFormConstants.MESSAGE_START, message);
+		log.info(PlatFormConstants.MESSAGE_START, message);
 		
 		HashMap<String, Object> parameterMap = new HashMap<String, Object>();
 		parameterMap.put("userId", userId);
@@ -52,7 +52,7 @@ public class UserController {
 		model.addAttribute(PlatFormConstants.RESULT_LIST, userList);
 		model.addAttribute(PlatFormConstants.PARAMETER_MAP, parameterMap);
 		
-		logger.info(PlatFormConstants.MESSAGE_END, message);
+		log.info(PlatFormConstants.MESSAGE_END, message);
 		return ROOT_URL + "user_list";
 	}
 
@@ -85,7 +85,7 @@ public class UserController {
 	@RequestMapping("doUserSave.do")
 	public String insertOrUpdateSave(Model model, HttpServletRequest request, User user, String pageType, String roleIds){
 		String message = "角色新增/更新";
-		logger.info(PlatFormConstants.MESSAGE_START, message);
+		log.info(PlatFormConstants.MESSAGE_START, message);
 		
 		if(PlatFormConstants.PAGE_TYPE_UPDATE.equals(pageType)){
 			if(StringUtils.isEmpty(user.getUserId())){
@@ -104,7 +104,7 @@ public class UserController {
 			throw new RuntimeException("pageType类型错误");
 		}
 		
-		logger.info(PlatFormConstants.MESSAGE_END, message);
+		log.info(PlatFormConstants.MESSAGE_END, message);
 		model.addAttribute(PlatFormConstants.RESPONSE_CODE, PlatFormConstants.CODE_SUCC);
 		model.addAttribute(PlatFormConstants.RESPONSE_MESSAGE, "操作成功");
 		model.addAttribute(PlatFormConstants.REDIRECT_URL, "userList.do");
@@ -114,7 +114,7 @@ public class UserController {
 	@RequestMapping("doUserDelete.do")
 	public String deleteSystemUser(Model model, HttpServletRequest request, User user, String pageType){
 		String message = "用户删除";
-		logger.info(PlatFormConstants.MESSAGE_START, message);
+		log.info(PlatFormConstants.MESSAGE_START, message);
 		
 		if(PlatFormConstants.PAGE_TYPE_DELETE.equals(pageType)){
 			if(StringUtils.isEmpty(user.getUserId())){
@@ -125,7 +125,7 @@ public class UserController {
 			throw new RuntimeException("pageType类型错误");
 		}
 		
-		logger.info(PlatFormConstants.MESSAGE_END, message);
+		log.info(PlatFormConstants.MESSAGE_END, message);
 		model.addAttribute(PlatFormConstants.RESPONSE_CODE, PlatFormConstants.CODE_SUCC);
 		model.addAttribute(PlatFormConstants.RESPONSE_MESSAGE, "操作成功");
 		model.addAttribute(PlatFormConstants.REDIRECT_URL, "userList.do");
@@ -135,12 +135,12 @@ public class UserController {
 	@RequestMapping("exportExcel.do")
 	public void exportExcel(Model model, HttpServletRequest request, HttpServletResponse response){
 		String message = "导出列表";
-		logger.info(PlatFormConstants.MESSAGE_START, message);
+		log.info(PlatFormConstants.MESSAGE_START, message);
 		
 		List<User> userList = userService.selectUserList(null);
 		String[] headers = {"用户ID=getUserId", "用户名=getUserName", "密码"};
 		ExcelUtils.exportExcel(userList, headers, "用户列表", request, response);
 		
-		logger.info(PlatFormConstants.MESSAGE_END, message);
+		log.info(PlatFormConstants.MESSAGE_END, message);
 	}
 }
