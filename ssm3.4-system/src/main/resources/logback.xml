@@ -5,7 +5,7 @@
   -->
 <configuration scan="false" scanPeriod="60 seconds" debug="true">
 	<!-- 定义日志的根目录 -->
-    <property name="LOG_HOME" value="D:/testlo" />
+    <property name="LOG_HOME" value="D:/logs" />
     <!-- 定义日志文件名称 -->
     <property name="fileName" value="ssm-system"></property>
     
