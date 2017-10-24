@@ -33,7 +33,7 @@
 			<MaxHistory>3</MaxHistory> 
 			<!-- 当日志文件超过maxFileSize指定的大小是，根据上面提到的%i进行日志文件滚动 --> 
 			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP"> 
-				<maxFileSize>20KB</maxFileSize>
+				<maxFileSize>20MB</maxFileSize>
 			</timeBasedFileNamingAndTriggeringPolicy> 
 		</rollingPolicy> 
 		<layout class="com.yang.common.log.MyPatternLayout"> 

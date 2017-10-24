@@ -85,10 +85,10 @@
 		  <if test="menuType != null" >
 		    menu_type = #{menuType,jdbcType=VARCHAR},
 		  </if>
-		  <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(menuLevel)" >
+		  <if test="menuLevel != null" >
 		    menu_level = #{menuLevel,jdbcType=INTEGER},
 		  </if>
-		  <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(orderSeq)" >
+		  <if test="orderSeq != null" >
 		    order_seq = #{orderSeq,jdbcType=INTEGER},
 		  </if>
 		</set>
