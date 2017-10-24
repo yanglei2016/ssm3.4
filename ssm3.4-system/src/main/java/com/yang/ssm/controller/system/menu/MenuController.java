@@ -69,7 +69,7 @@ public class MenuController {
 			resultMap.put(PlatFormConstants.RESPONSE_CODE, PlatFormConstants.CODE_ERROR);
 			resultMap.put(PlatFormConstants.RESPONSE_MESSAGE, "操作失败，菜单ID为空！");
 		}
-		ResponseUtils.renderHtmlJson(response, GsonUtils.toJson(resultMap));
+		ResponseUtils.renderHtmlJson(response, GsonUtils.toJsonString(resultMap));
 		logger.info(PlatFormConstants.MESSAGE_END, message);
 	}
 	
@@ -92,7 +92,7 @@ public class MenuController {
 			resultMap.put(PlatFormConstants.RESPONSE_CODE, PlatFormConstants.CODE_ERROR);
 			resultMap.put(PlatFormConstants.RESPONSE_MESSAGE, "操作失败，菜单ID为空！");
 		}
-		ResponseUtils.renderHtmlJson(response, GsonUtils.toJson(resultMap));
+		ResponseUtils.renderHtmlJson(response, GsonUtils.toJsonString(resultMap));
 		logger.info(PlatFormConstants.MESSAGE_END, message);
 	}
 	

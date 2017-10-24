@@ -70,7 +70,7 @@ public class UserController {
 			model.addAttribute("user", user);
 			
 			List<UserRole> userRoleList = userService.selectUserRoleByUserId(userId);
-			model.addAttribute("userRoleJson", GsonUtils.toJson(userRoleList));
+			model.addAttribute("userRoleJson", GsonUtils.toJsonString(userRoleList));
 		}
 		if(PlatFormConstants.PAGE_TYPE_DETAIL.equals(pageType) || PlatFormConstants.PAGE_TYPE_DELETE.equals(pageType)){
 			returnPage = ROOT_URL + "user_detail";

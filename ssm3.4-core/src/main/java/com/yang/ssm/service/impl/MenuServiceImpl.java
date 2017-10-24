@@ -95,7 +95,7 @@ public class MenuServiceImpl implements MenuService {
 					treeList.add(map);
 				}
 			}
-			resultTreeData = GsonUtils.toJson(treeList);
+			resultTreeData = GsonUtils.toJsonString(treeList);
 		}
 		return resultTreeData;
 	}
