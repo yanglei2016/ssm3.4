@@ -1,45 +1,42 @@
 package com.yang.train.entity;
 
 public class NewTrain {
-    private Boolean startFlag;// 是否始发
 
-    private Boolean endFlag;// 是否终点
-
+    private String stationTrainCode; // 火车编号
+    
     private String trainNo; // 车次
 
     private String location_code; // 车次
-
-    private String secretStr; // 到达地
-
-    private String ypInfo; // 到达地
-
+    
+    private String fromStationName; // 出发地
+    
     private String fromStationTelecode; // 出发地编码
 
+    private String toStationName; // 目的地
+
     private String toStationTelecode; // 目的地编码
+    
+    private Boolean startFlag;// 是否始发
 
-    private String toStationName; // 到达地
-
-    private String buttonTextInfo; // 按钮汉字
-
-    private String stationTrainCode; // 火车编号
-
-    private String fromStationName; // 出发地
-
+    private Boolean endFlag;// 是否终点
+    
     private String startTime; // 出发时间
 
     private String arriveTime; // 到达时间
-
+    
     private String lishi; // 需要时间
+
+    private String swzNum; // 商务座/特等座数量
 
     private String zyNum; // 一等座数量
 
     private String zeNum; // 二等座数量
 
-    private String swzNum; // 商务座数量
-
     private String grNum; // 高级软卧数量
 
     private String rwNum; // 软卧数量
+    
+    private String dwNum; // 动卧数量
 
     private String rzNum; // 软座数量
 
@@ -47,11 +44,15 @@ public class NewTrain {
 
     private String yzNum; // 硬座数量
 
-    private String tzNum; // 特等座数量
-
     private String wzNum; // 无座数量
 
-    private String qtNum; // 无座数量
+    private String qtNum; // 其他数量
+    
+    private String secretStr; // 到达地
+
+    private String ypInfo; // 到达地
+
+    private String buttonTextInfo; // 按钮汉字
 
     public String getQtNum() {
         return "".equals(qtNum) || qtNum == null ? "--" : qtNum;
@@ -245,12 +246,12 @@ public class NewTrain {
         this.yzNum = yzNum;
     }
 
-    public String getTzNum() {
-        return "".equals(tzNum) || tzNum == null ? "--" : tzNum;
+    public String getDwNum() {
+        return "".equals(dwNum) || dwNum == null ? "--" : dwNum;
     }
 
-    public void setTzNum(String tzNum) {
-        this.tzNum = tzNum;
+    public void setDwNum(String dwNum) {
+        this.dwNum = dwNum;
     }
 
     public String getWzNum() {

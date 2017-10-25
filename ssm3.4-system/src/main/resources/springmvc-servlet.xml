@@ -23,10 +23,12 @@
 	
 	<aop:aspectj-autoproxy />
 	
-	<mvc:interceptors>
-		<!--对所有的请求记性拦截-->
-        <bean class="com.yang.train.common.MyHandlerInterceptor"/>
-	</mvc:interceptors>
+	<mvc:interceptors>  
+	    <mvc:interceptor>  
+	        <mvc:mapping path="/train/index/**"/>  
+	        <bean class="com.yang.train.common.MyHandlerInterceptor"></bean>  
+	    </mvc:interceptor>  
+	</mvc:interceptors>  
 	
 	<!-- 视图解析 -->
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">

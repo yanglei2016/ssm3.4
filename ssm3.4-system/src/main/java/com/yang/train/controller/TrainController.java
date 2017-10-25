@@ -5,6 +5,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.yang.common.contants.PlatFormConstants;
 import com.yang.common.tools.json.GsonUtils;
 import com.yang.train.util.CookieUtil;
 import com.yang.train.entity.NewTrain;
@@ -44,6 +47,7 @@ import com.yang.train.util.HttpsRequestNg;
 @Controller
 @RequestMapping("train/index")
 public class TrainController extends BaseController {
+	
 	private final static Logger logger = Logger.getLogger(TrainController.class);
 
 	// 首页
@@ -217,17 +221,29 @@ public class TrainController extends BaseController {
 	@RequestMapping("query.do")
 	public String train(HttpServletRequest request, Model model, String fromStation, String toStation,
 			String startDate) {
-		fromStation = "BJP";
-		toStation = "SHH";
-		startDate = "2017-10-25";
-		try {
-			List<NewTrain> queryTrain = TrainService.queryTrain(fromStation, toStation, startDate);
-			System.out.println("余票信息："+ GsonUtils.toJsonString(queryTrain));
-			model.addAttribute("list", queryTrain);
-		} catch (Exception e) {
-			e.printStackTrace();
+		HashMap<String, Object> parameterMap = new HashMap<String, Object>();
+		parameterMap.put("fromStation", fromStation);
+		parameterMap.put("toStation", toStation);
+		if(StringUtils.isBlank(startDate)){
+			startDate = com.yang.common.tools.DateUtils.getCurrentDate();
 		}
-		return "train/train";
+		parameterMap.put("startDate", startDate);
+		
+		List<NewTrain> queryTrain = null;
+		if(StringUtils.isNotBlank(fromStation) && StringUtils.isNotBlank(toStation)){
+			try {
+				queryTrain = TrainService.queryTrain(fromStation, toStation, startDate);
+				if(queryTrain != null && queryTrain.size() > 0){
+					logger.info("余票信息："+ GsonUtils.toJsonString(queryTrain));
+				}
+				
+			} catch (Exception e) {
+				logger.error("查询失败", e);
+			}
+		}
+		model.addAttribute("ticketsList", queryTrain);
+		model.addAttribute(PlatFormConstants.PARAMETER_MAP, parameterMap);
+		return "train/tickets_list";
 	}
 
 }

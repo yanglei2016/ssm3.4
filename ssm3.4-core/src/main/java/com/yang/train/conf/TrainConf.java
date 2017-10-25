@@ -2,6 +2,9 @@ package com.yang.train.conf;
 
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.alibaba.fastjson.JSONObject;
 import com.yang.train.util.HttpsRequestNg;
 /**
@@ -10,19 +13,32 @@ import com.yang.train.util.HttpsRequestNg;
  *
  */
 public class TrainConf {
+	
+	/**logger日志*/
+	private static final Logger logger = LoggerFactory
+			.getLogger(TrainConf.class);
+	
 	public static Properties prop;
 
 	public static Properties getProperties() {
 		if (prop == null) {
 			prop = new Properties();
+			String respMsg = "";
 			try {
-				JSONObject json = JSONObject.parseObject(new String(HttpsRequestNg.getHttpClient().doGet("https://kyfw.12306.cn/otn/leftTicket/query"), "UTF-8"));
+				respMsg = new String(HttpsRequestNg.getHttpClient().doGet("https://kyfw.12306.cn/otn/leftTicket/query"), "UTF-8");
+			} catch (Exception e) {
+				logger.error("获取查询路径异常", e);
+			}
+			
+			try {
+				JSONObject json = JSONObject.parseObject(respMsg);
 				if (json.containsKey("c_url"))
 					prop.setProperty("query_url", json.getString("c_url"));
 				else
 					prop.setProperty("query_url", "leftTicket/query");
 			} catch (Exception e) {
-				e.printStackTrace();
+				//logger.error("解析查询路径异常", e);
+				logger.info("解析查询路径异常");
 			}
 		}
 		return prop;

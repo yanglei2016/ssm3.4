@@ -406,52 +406,56 @@ public class TrainService {
 		try {
 			String urlStr = TrainConf.queryUrl + startDate + "&leftTicketDTO.from_station=" + fromStation
 					+ "&leftTicketDTO.to_station=" + toStation + "&purpose_codes=ADULT";
-			String result = new String(HttpsRequestNg.getHttpClient().doGet(urlStr), "UTF-8");
-			System.out.println(result);
-			JSONObject parseObject = JSONObject.parseObject(result);
-			if (!result.equals("-1")) {
+			String resultMsg = new String(HttpsRequestNg.getHttpClient().doGet(urlStr), "UTF-8");
+			logger.info("查询余票返回：{}", resultMsg);
+			
+			JSONObject parseObject = JSONObject.parseObject(resultMsg);
+			if (!resultMsg.equals("-1")) {
 				if(parseObject.getBooleanValue("status")){
 					JSONObject resultData = parseObject.getJSONObject("data");
-					JSONArray result1 = resultData.getJSONArray("result");
-					JSONObject sationMap=resultData.containsKey("map")?resultData.getJSONObject("map"):new JSONObject();
-					logger.info("车次查询成功共" + result1.size() + "车次");
-					List<NewTrain> list=new ArrayList<>();
-					for (int i=0;i<result1.size();i++) {
-						String data = result1.getString(i);
-						String[] datas = data.split("\\|");
-						NewTrain train=new NewTrain();
-						train.setStationTrainCode(datas[3]);
-						train.setTrainNo(datas[3]);
-						train.setStartFlag(datas[6].equals(datas[4]));
-						train.setEndFlag(datas[7].equals(datas[5]));
-						train.setFromStationName(sationMap.getString(datas[6]));
-						train.setFromStationTelecode(datas[6]);
-						train.setToStationName(sationMap.getString(datas[7]));
-						train.setToStationTelecode(datas[7]);
-						train.setStartTime(datas[8]);
-						train.setArriveTime(datas[9]);
-						train.setTrainNo(datas[3]);
-						train.setLishi(datas[10]);
-						if(!"列车停运".equals(datas[1])) {
-							train.setSwzNum(datas[32].equals("") ? "--" : datas[32]);
-							train.setTzNum(datas[25].equals("") ? "--" : datas[25]);
-							train.setZyNum(datas[31].equals("") ? "--" : datas[31]);
-							train.setZeNum(datas[30].equals("") ? "--" : datas[30]);
-							train.setGrNum(datas[21].equals("") ? "--" : datas[21]);
-							train.setRwNum(datas[23].equals("") ? "--" : datas[23]);
-							train.setYwNum(datas[28].equals("") ? "--" : datas[28]);
-							train.setRzNum(datas[24].equals("") ? "--" : datas[24]);
-							train.setYzNum(datas[29].equals("") ? "--" : datas[29]);
-							train.setWzNum(datas[26].equals("") ? "--" : datas[26]);
-							train.setQtNum(datas[22].equals("") ? "--" : datas[22]);
+					JSONArray result = resultData.getJSONArray("result");
+					int size = result == null ? 0 : result.size();
+					logger.info("车次查询成功共【{}】车次", size);
+					if(size > 0){
+						JSONObject sationMap = resultData.containsKey("map") ? resultData.getJSONObject("map") : new JSONObject();
+						List<NewTrain> list = new ArrayList<NewTrain>();
+						for (int i = 0; i < size; i++) {
+							String data = result.getString(i);
+							String[] datas = data.split("\\|", 36);
+							NewTrain train = new NewTrain();
+							train.setStationTrainCode(datas[3]);
+							train.setTrainNo(datas[3]);
+							train.setFromStationName(sationMap.getString(datas[6]));
+							train.setFromStationTelecode(datas[6]);
+							train.setToStationName(sationMap.getString(datas[7]));
+							train.setToStationTelecode(datas[7]);
+							train.setStartFlag(datas[6].equals(datas[4]));
+							train.setEndFlag(datas[7].equals(datas[5]));
+							train.setStartTime(datas[8]);
+							train.setArriveTime(datas[9]);
+							train.setLishi(datas[10]);
+							
+							if(!"列车停运".equals(datas[1])) {
+								train.setGrNum(datas[21].equals("") ? "--" : datas[21]); //
+								train.setQtNum(datas[22].equals("") ? "--" : datas[22]); //
+								train.setRwNum(datas[23].equals("") ? "--" : datas[23]);
+								train.setRzNum(datas[24].equals("") ? "--" : datas[24]);
+								train.setWzNum(datas[26].equals("") ? "--" : datas[26]);
+								train.setYwNum(datas[28].equals("") ? "--" : datas[28]);
+								train.setYzNum(datas[29].equals("") ? "--" : datas[29]);
+								train.setZeNum(datas[30].equals("") ? "--" : datas[30]);
+								train.setZyNum(datas[31].equals("") ? "--" : datas[31]);
+								train.setSwzNum(datas[32].equals("") ? "--" : datas[32]);
+								train.setDwNum(datas[33].equals("") ? "--" : datas[33]); //
+							}
+							train.setSecretStr(datas[0]);
+							train.setButtonTextInfo(datas[1]);
+							train.setYpInfo(datas[12]);
+							train.setLocation_code(datas[15]);
+							list.add(train);
 						}
-						train.setSecretStr(datas[0]);
-						train.setButtonTextInfo(datas[1]);
-						train.setYpInfo(datas[12]);
-						train.setLocation_code(datas[15]);
-						list.add(train);
+						return list;
 					}
-					return list;
 				}
 				if(parseObject.containsKey("c_url")){
 					TrainConf.getProperties().setProperty("query_url",parseObject.getString("c_url"));
@@ -459,8 +463,7 @@ public class TrainService {
 				}
 			}
 		} catch (Exception e) {
-			logger.info("车次查询失败");
-			e.printStackTrace();
+			logger.error("车次查询失败", e);
 		}
 		return new ArrayList<NewTrain>();
 	}
