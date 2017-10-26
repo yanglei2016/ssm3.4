@@ -4,8 +4,6 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,7 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,33 +28,31 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.yang.common.contants.PlatFormConstants;
+import com.yang.common.tools.DateUtils;
 import com.yang.common.tools.json.GsonUtils;
-import com.yang.train.util.CookieUtil;
+import com.yang.common.vo.ResponseVo;
+import com.yang.ssm.utils.ResponseUtils;
 import com.yang.train.entity.NewTrain;
 import com.yang.train.entity.Passenger;
 import com.yang.train.service.TrainService;
 import com.yang.train.util.Cookie;
-import com.yang.train.util.DateUtils;
+import com.yang.train.util.CookieUtil;
 import com.yang.train.util.HttpsRequestNg;
 
-/**
- * 
- * @author lijintao
- *
- */
 @Controller
 @RequestMapping("train/index")
 public class TrainController extends BaseController {
 	
-	private final static Logger logger = Logger.getLogger(TrainController.class);
+	/**logger日志*/
+	private static final Logger logger = LoggerFactory
+			.getLogger(TrainController.class);
 
 	// 首页
 	@RequestMapping
 	public String index(Model model) {
-		model.addAttribute("startDate", DateUtils.format(new Date()));
-		model.addAttribute("minDate", DateUtils.format(new Date()));
-		model.addAttribute("maxDate", DateUtils.format(DateUtils.addDateTime(new Date(), 59)));
+		model.addAttribute("startDate", DateUtils.getCurrentDate());
+		model.addAttribute("minDate", DateUtils.getCurrentDate());
+		model.addAttribute("maxDate", DateUtils.getDateByNum(DateUtils.getCurrentDate(), 29));
 		return "train/index";
 	}
 
@@ -78,33 +75,33 @@ public class TrainController extends BaseController {
 	}
 
 	// 登录
-	@ResponseBody
-	@RequestMapping("/loginAysnSuggest")
-	public JSONObject loginAysnSuggest(HttpServletRequest request, HttpServletResponse response, String user_name,
+	@RequestMapping("/loginAysnSuggest.do")
+	public void loginAysnSuggest(HttpServletRequest request, HttpServletResponse response, String user_name,
 			String password, String randCode) throws IOException {
-		Boolean loginAysnSuggest = TrainService.loginAysnSuggest(user_name, password, randCode);
-		Map<String, Cookie> cookies = HttpsRequestNg.getHttpClient().cookies;
-		Set<Map.Entry<String, Cookie>> entrys = cookies.entrySet();
-		for (Map.Entry<String, Cookie> entry : entrys) {
-			Cookie cookie = entry.getValue();
-			CookieUtil.setCookie(response, cookie.getName(), cookie.getValue());
+		ResponseVo responseVo = TrainService.loginAysnSuggest(user_name, password, randCode);
+		if(ResponseVo.SUCCES_CODE.equals(responseVo.getRespCode())){
+			Map<String, Cookie> cookies = HttpsRequestNg.getHttpClient().cookies;
+			Set<Map.Entry<String, Cookie>> entrys = cookies.entrySet();
+			for (Map.Entry<String, Cookie> entry : entrys) {
+				Cookie cookie = entry.getValue();
+				CookieUtil.setCookie(response, cookie.getName(), cookie.getValue());
+			}
+			String string = new String(HttpsRequestNg.getHttpClient().doPost("https://kyfw.12306.cn/otn/login/userLogin"));
+			//logger.info("userLogin返回：{}", string);
+			String reg = "<span style=\"width:50px;\">[\u4e00-\u9fa5]{0,100}</span>";
+			Matcher m = Pattern.compile(reg).matcher(string);
+			String username = "";
+			while (m.find()) {
+				String r = m.group().trim();
+				username = r.trim() != "" ? r.split("\">")[1] : "";
+			}
+			HttpSession session = request.getSession();
+			username = username.substring(0, username.length() - 7);
+			session.setAttribute("username", username);
+			responseVo.setData(username);
 		}
-		String string = new String(HttpsRequestNg.getHttpClient().doPost("https://kyfw.12306.cn/otn/login/userLogin"));
-		String reg = "<span style=\"width:50px;\">[\u4e00-\u9fa5]{0,100}</span>";
-		Matcher m = Pattern.compile(reg).matcher(string);
-		String username = "";
-		while (m.find()) {
-			String r = m.group().trim();
-			username = r.trim() != "" ? r.split("\">")[1] : "";
-		}
-		HttpSession session = request.getSession();
-		username = username.substring(0, username.length() - 7);
-		session.setAttribute("username", username);
-		JSONObject fromObject = new JSONObject();
-		fromObject.put("username", username);
-		fromObject.put("flag", loginAysnSuggest);
-		fromObject.put("messages", loginAysnSuggest?"登录成功":"登录失败");
-		return fromObject;
+		logger.info("Ajax返回：{}", GsonUtils.toJsonString(responseVo));
+		ResponseUtils.renderHtmlJson(response, GsonUtils.toJsonString(responseVo));
 	}
 
 	// 退出登录
@@ -117,9 +114,10 @@ public class TrainController extends BaseController {
 		return "1";
 	}
 
-	@RequestMapping("/login")
-	public String login(HttpServletRequest request) throws IOException {
-		clearSession(request);
+	@RequestMapping("/login.do")
+	public String login(Model model, HttpServletRequest request, @RequestParam(defaultValue = "login") String moduled) throws IOException {
+		//clearSession(request);
+		model.addAttribute("moduled", moduled);
 		return "train/login";
 	}
 
@@ -130,13 +128,12 @@ public class TrainController extends BaseController {
 	}
 
 	// 预提交订单
-	@ResponseBody
-	@RequestMapping("/submitOrderRequest")
-	public JSONObject submitOrderRequest(HttpServletRequest request, String secretStr, String train_date,
+	@RequestMapping("/submitOrderRequest.do")
+	public void submitOrderRequest(HttpServletRequest request, HttpServletResponse response, String secretStr, String train_date,
 			String query_from_station_name, String query_to_station_name) throws IOException {
 		JSONObject submitOrderRequest = TrainService.submitOrderRequest(secretStr, train_date, query_from_station_name,
 				query_to_station_name);
-		return submitOrderRequest;
+		ResponseUtils.renderHtmlJson(response, submitOrderRequest.toString());
 	}
 
 	// 检查订单有效
@@ -174,34 +171,33 @@ public class TrainController extends BaseController {
 	}
 
 	// 获取乘客信息
-	@RequestMapping("/passengers")
-	public String passengers(HttpServletRequest request, Model model) throws IOException {
+	@RequestMapping("/passengers.do")
+	public void passengers(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		List<Passenger> passengers = TrainService.passengers();
-		model.addAttribute("list", passengers);
-		return "train/passengers";
+		logger.info("乘客信息返回：{}", GsonUtils.toJsonString(passengers));
+		ResponseUtils.renderHtmlJson(response, GsonUtils.toJsonString(passengers));
 	}
 
 	// 检查用户登录是否有效
-	@ResponseBody
-	@RequestMapping("/checkUser")
-	public String checkUser(HttpServletRequest request, Model model) throws IOException {
+	@RequestMapping("/checkUser.do")
+	public void checkUser(HttpServletRequest request, HttpServletResponse response, Model model) throws IOException {
 		Boolean checkUser = TrainService.checkUser();
-		return checkUser.toString();
+		ResponseUtils.renderHtmlJson(response, GsonUtils.toJsonString(checkUser));
 	}
 
 	// 校验验证码
-	@ResponseBody
-	@RequestMapping("/checkRandCodeAnsyn")
-	public JSONObject checkRandCodeAnsyn(HttpServletRequest request, String randCode,
+	@RequestMapping("/checkRandCodeAnsyn.do")
+	public void checkRandCodeAnsyn(HttpServletRequest request, HttpServletResponse response, String randCode,
 			@RequestParam(value = "repeat_submit_token", required = false) String repeat_submit_token)
 			throws IOException {
 		JSONObject checkRandCodeAnsyn = TrainService.checkRandCodeAnsyn(randCode, repeat_submit_token);
-		return checkRandCodeAnsyn;
+		logger.info("校验验证码返回：{}", GsonUtils.toJsonString(checkRandCodeAnsyn));
+		ResponseUtils.renderHtmlJson(response, GsonUtils.toJsonString(checkRandCodeAnsyn));
 	}
 
 	// 获取验证码
 	@ResponseBody
-	@RequestMapping("/getPassCodeNew")
+	@RequestMapping("/getPassCodeNew.do")
 	public void getPassCodeNew(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam(defaultValue = "login") String module) throws IOException {
 		byte[] doGet = TrainService.getPassCodeNew(module);
@@ -221,13 +217,9 @@ public class TrainController extends BaseController {
 	@RequestMapping("query.do")
 	public String train(HttpServletRequest request, Model model, String fromStation, String toStation,
 			String startDate) {
-		HashMap<String, Object> parameterMap = new HashMap<String, Object>();
-		parameterMap.put("fromStation", fromStation);
-		parameterMap.put("toStation", toStation);
 		if(StringUtils.isBlank(startDate)){
-			startDate = com.yang.common.tools.DateUtils.getCurrentDate();
+			startDate = DateUtils.getCurrentDate();
 		}
-		parameterMap.put("startDate", startDate);
 		
 		List<NewTrain> queryTrain = null;
 		if(StringUtils.isNotBlank(fromStation) && StringUtils.isNotBlank(toStation)){
@@ -242,7 +234,9 @@ public class TrainController extends BaseController {
 			}
 		}
 		model.addAttribute("ticketsList", queryTrain);
-		model.addAttribute(PlatFormConstants.PARAMETER_MAP, parameterMap);
+		model.addAttribute("startDate", startDate);
+		model.addAttribute("minDate", DateUtils.getCurrentDate());
+		model.addAttribute("maxDate", DateUtils.getDateByNum(DateUtils.getCurrentDate(), 29));
 		return "train/tickets_list";
 	}
 

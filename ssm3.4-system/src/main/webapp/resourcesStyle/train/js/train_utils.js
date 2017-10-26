@@ -1,9 +1,9 @@
 function login(){
-	dialog.tip.work({type:'loading',  content : '正在努力加载数据，请稍后...', lock : true, timer:0});
+	/*dialog.tip.work({type:'loading',  content : '正在努力加载数据，请稍后...', lock : true, timer:0});
 	flag=false;
 	 $.ajax({
 		type : "POST",
-		url : path+"/index/login",
+		url : path+"/index/login.do",
 		dataType : "html",
 		success : function(data) {
 			dialog.tip.remove();
@@ -13,7 +13,8 @@ function login(){
 		},error:function(){
 			dialog.tip.remove();
 		}
-	});
+	});*/
+	 location.href = path + "/index/login.do";
 }
 function checkCode(){
 	dialog.tip.work({type:'loading',  content : '正在努力加载数据，请稍后...', lock : true, timer:0});
@@ -129,8 +130,8 @@ function queryOrderWaitTime(datas){
 }
 function submitOrderRequest(secretStr,start_time,train_no,from_station_telecode,to_station_telecode,yp_info,from_station_name,to_station_name,location_code,station_train_code){
 	dialog.tip.work({type:'loading',  content : '正在努力加载数据，请稍后...', lock : true, timer:0});
-	var train_date=$("#startDate").val();
-	var data={train_date:train_date,secretStr:secretStr,query_from_station_name:from_station_name,query_to_station_name:to_station_name};
+	var train_date = $("#startDate").val();
+	var data = {train_date:train_date,secretStr:secretStr,query_from_station_name:from_station_name,query_to_station_name:to_station_name};
 	$("#secretStr").val(secretStr);
 	$("#start_time").val(start_time);
 	$("#train_no").val(train_no);
@@ -143,9 +144,9 @@ function submitOrderRequest(secretStr,start_time,train_no,from_station_telecode,
 	$("#station_train_code").val(station_train_code);
 	$.ajax({
 		type : "POST",
-		url : path+"/index/submitOrderRequest",
+		url : path + "/index/submitOrderRequest.do",
 		dataType : "json",
-		data:data,
+		data: data,
 		success : function(data) {
 			dialog.tip.remove();
 			if(!data.status){
@@ -169,7 +170,8 @@ function submitOrderRequest(secretStr,start_time,train_no,from_station_telecode,
 function setCookie(name,value,Days) {
 	var Days = 30;
 	var exp = new Date();
-	exp.setTime(exp.getTime() + Days*24*60*60*1000);
+	//exp.setTime(exp.getTime() + Days*24*60*60*1000);
+	exp.setTime(exp.getTime() + Days*60*1000);
 	document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString();
 }
 function getCookie(name) {

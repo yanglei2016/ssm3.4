@@ -8,12 +8,14 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.yang.common.vo.ResponseVo;
 import com.yang.train.conf.TrainConf;
 import com.yang.train.entity.NewTrain;
 import com.yang.train.entity.Passenger;
@@ -56,19 +58,33 @@ public class TrainService {
 	 * @return
 	 * @throws IOException
 	 */
-	public static Boolean loginAysnSuggest(String user_name, String password, String randCode) throws IOException {
-		String urlStr = TrainConf.loginAysnSuggestUrl + user_name + "&userDTO.password=" + password + "&randCode="
-				+ URLEncoder.encode(randCode,"UTF-8");
-		String result = new String(HttpsRequestNg.getHttpClient().doPost(urlStr), "UTF-8");
-		JSONObject parseObject = JSONObject.parseObject(result);
-		if(!parseObject.getBoolean("status")){
-			return parseObject.getBoolean("status");
+	public static ResponseVo loginAysnSuggest(String user_name, String password, String randCode){
+		JSONObject respJson = null;
+		try{
+			String urlStr = TrainConf.loginAysnSuggestUrl + user_name + "&userDTO.password=" + password + "&randCode="
+					+ URLEncoder.encode(randCode,"UTF-8");
+			logger.info("登录请求：{}", urlStr);
+			String respMsg = new String(HttpsRequestNg.getHttpClient().doPost(urlStr), "UTF-8");
+			logger.info("登录返回：{}", respMsg);
+			
+			respJson = JSONObject.parseObject(respMsg);
+			if(!respJson.getBoolean("status")){
+				return ResponseVo.err(respJson.getString("messages"));
+			}
+			JSONObject dataJson = respJson.getJSONObject("data");
+			if(dataJson == null || dataJson.size() <= 0){
+				return ResponseVo.err(respJson.getString("messages"));
+			}
+			if(dataJson.containsKey("loginCheck")){
+				String loginCheck = dataJson.getString("loginCheck");
+				if(StringUtils.isNotBlank(loginCheck) && "Y".equals(loginCheck)){
+					return ResponseVo.ok("登录成功");
+				}
+			}
+		}catch(Exception e){
+			ResponseVo.err("登录异常" + e.getMessage());
 		}
-		JSONObject data = parseObject.getJSONObject("data");
-		String loginCheck = data.getString("loginCheck");
-		String ss = "Y".equals(loginCheck) ? "成功" : "失败";
-		logger.info("登录结果" + ss);
-		return "Y".equals(loginCheck);
+		return ResponseVo.err(respJson.getString("messages"));
 	}
 
 	// 退出登录
@@ -343,21 +359,21 @@ public class TrainService {
 	 * @return
 	 */
 	public static Boolean checkUser() {
-		new Thread() {
+		/*new Thread() {
 			public void run() {
 				// 获取最新查询车次url
 				TrainConf.getProperties();
 			}
-		}.start();
+		}.start();*/
 		try {
 			String result = new String(HttpsRequestNg.getHttpClient().doPost(TrainConf.checkUser));
-			boolean boolean1 = JSONObject.parseObject(result).getJSONObject("data").getBoolean("flag");
-			System.out.println(DateUtils.longDate(new Date()) + "checkUser" + boolean1);
-			if (boolean1) {
+			logger.info("检查用户登录是否有效返回：{}", result);
+			boolean flag = JSONObject.parseObject(result).getJSONObject("data").getBoolean("flag");
+			if (flag) {
 				return true;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("检查用户登录是否有效异常", e);
 		}
 		return false;
 	}

@@ -26,6 +26,7 @@ public class TrainConf {
 			String respMsg = "";
 			try {
 				respMsg = new String(HttpsRequestNg.getHttpClient().doGet("https://kyfw.12306.cn/otn/leftTicket/query"), "UTF-8");
+				//logger.info(respMsg);
 			} catch (Exception e) {
 				logger.error("获取查询路径异常", e);
 			}
