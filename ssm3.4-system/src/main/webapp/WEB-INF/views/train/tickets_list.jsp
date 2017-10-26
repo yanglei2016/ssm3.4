@@ -76,7 +76,6 @@
 			<tr>
 				<td class="text-center">
 					<input type="submit" value="查询" id="search" class="btn btn-info " style="width: 80px;"/>
-					<input type="button" value="登录" id="loginbutton" class="btn btn-info " style="width: 80px;"/>
 					<a class="btn btn-info" id="loginModalBtn" href="${pageContext.request.contextPath}/train/index/login.do" role="button" data-toggle="modal" data-target="#loginModal" style="width: 55px;">登录</a>
 				</td>
 			</tr>
@@ -215,7 +214,7 @@
 		var uName = getCookie("uName");
 		if(uName != null && uName != ''){
 			$("#userNameSpan").text("您好，"+ uName);
-			$("#loginbutton").hide();
+			$("#loginModalBtn").hide();
 // 			getPassengers();
 		}
 		
