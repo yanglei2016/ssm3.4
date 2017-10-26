@@ -117,7 +117,7 @@ public class TrainController extends BaseController {
 	@RequestMapping("/login.do")
 	public String login(Model model, HttpServletRequest request) throws IOException {
 		//clearSession(request);
-		return "train/login1";
+		return "train/login";
 	}
 
 	@RequestMapping("/img.do")
