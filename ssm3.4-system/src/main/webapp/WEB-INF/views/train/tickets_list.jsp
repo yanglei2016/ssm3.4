@@ -77,6 +77,7 @@
 				<td class="text-center">
 					<input type="submit" value="查询" id="search" class="btn btn-info " style="width: 80px;"/>
 					<input type="button" value="登录" id="loginbutton" class="btn btn-info " style="width: 80px;"/>
+					<a class="btn btn-info" id="loginModalBtn" href="${pageContext.request.contextPath}/train/index/login.do" role="button" data-toggle="modal" data-target="#loginModal" style="width: 55px;">登录</a>
 				</td>
 			</tr>
 		</table>
@@ -148,22 +149,39 @@
     </div> 
   </div>
   </div>
-  <div style="top: 0; left: 0; z-index: 1000; POSITION: absolute;">
-		<div style="overflow: hidden; left: 323px; top: 90.5px; display: none;" id="form_cities">
-			<div id="top_cities">简码/汉字或↑↓</div>
-			<div id="panel_cities"></div>
-			<div style="display: block;" id="flip_cities">
-				<a href="" class="cityflip" onclick="city_showlist(1);return false;">向后&nbsp;»</a>
-			</div>
-		</div>
-	</div>
 
-	<div style="top: 0; left: 0; z-index: 1000; POSITION: absolute;">
-		<div style="overflow: hidden; display: none; left: 323px; top: 90.5px;" id="form_cities2">
-			<div id="top_cities1"></div>
-			<div id="panel_cities2"></div>
+<div style="top: 0; left: 0; z-index: 1000; POSITION: absolute;">
+	<div style="overflow: hidden; left: 323px; top: 90.5px; display: none;" id="form_cities">
+		<div id="top_cities">简码/汉字或↑↓</div>
+		<div id="panel_cities"></div>
+		<div style="display: block;" id="flip_cities">
+			<a href="" class="cityflip" onclick="city_showlist(1);return false;">向后&nbsp;»</a>
 		</div>
 	</div>
+</div>
+
+<!-- 城市选择框 -->
+<div style="top: 0; left: 0; z-index: 1000; POSITION: absolute;">
+	<div style="overflow: hidden; display: none; left: 323px; top: 90.5px;" id="form_cities2">
+		<div id="top_cities1"></div>
+		<div id="panel_cities2"></div>
+	</div>
+</div>
+	
+<!-- 登录框 -->
+<div id="loginModal" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<h3 id="myModalLabel">登录</h3>
+	</div>
+	<div class="modal-body">
+		<table class="table table-bordered">
+			<tbody>
+			</tbody>
+		</table>
+	</div>
+</div>
+	
 <script type="text/javascript">
 
 	var flag = true;
@@ -188,7 +206,7 @@
 	}
 	
 	$(function() {
-		checkUser();
+		//checkUser();
 		$("#fromStation").val(getCookie("fromStation"));
 		$("#fromStationText").val(getCookie("fromStationText"));
 		$("#toStation").val(getCookie("toStation"));
@@ -201,7 +219,7 @@
 // 			getPassengers();
 		}
 		
-		setInterval(checkUser, 1000 * 60);
+		//setInterval(checkUser, 1000 * 60);
 	});
 	
 	//获取联系人

@@ -115,13 +115,12 @@ public class TrainController extends BaseController {
 	}
 
 	@RequestMapping("/login.do")
-	public String login(Model model, HttpServletRequest request, @RequestParam(defaultValue = "login") String moduled) throws IOException {
+	public String login(Model model, HttpServletRequest request) throws IOException {
 		//clearSession(request);
-		model.addAttribute("moduled", moduled);
-		return "train/login";
+		return "train/login1";
 	}
 
-	@RequestMapping("/img")
+	@RequestMapping("/img.do")
 	public String img(Model model, @RequestParam(defaultValue = "login") String moduled) throws IOException {
 		model.addAttribute("moduled", moduled);
 		return "train/img";

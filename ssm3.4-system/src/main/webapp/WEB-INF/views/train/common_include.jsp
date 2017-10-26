@@ -20,17 +20,13 @@
 
 <link rel="shortcut icon" type="image/x-icon" href="${pageContext.request.contextPath}/resourcesStyle/train/img/favicon.ico">
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resourcesStyle/train/css/train.css" />
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resourcesStyle/train/css/dialog/dialog.css" />
 <script type="text/javascript" src="${pageContext.request.contextPath}/resourcesStyle/train/js/jquery-1.11.1.min.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/resourcesStyle/train/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/resourcesStyle/train/js/dialog.js" ></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resourcesStyle/train/js/train.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resourcesStyle/train/js/train_utils.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resourcesStyle/train/js/favorite_name.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resourcesStyle/train/js/station_name.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resourcesStyle/train/js/city_name.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resourcesStyle/train/js/train_list.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/resourcesStyle/train/js/train_login.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resourcesStyle/train/js/fastclick.js"></script>
 
 <script type="text/javascript">

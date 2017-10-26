@@ -62,6 +62,7 @@
 							<a href="toUserOperation.do?pageType=detail&userId=${bean.userId}">详细</a>
 			           		<ssm:auth no="010102">| <a href="toUserOperation.do?pageType=update&userId=${bean.userId}">修改</a></ssm:auth>
 			           		<ssm:auth no="010103">| <a href="toUserOperation.do?pageType=delete&userId=${bean.userId}">删除</a></ssm:auth>
+			           		| <a data-toggle="modal" data-target="#myModal" href="javascript:void(0)">详细</a>
 						</td>
 					</tr>
 				</c:forEach>
@@ -71,4 +72,30 @@
     </div> 
   </div>
   </div>
+  
+  
+<div id="myModal" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width:600px; margin-left:-300px; top:20%">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<h3 id="myModalLabel">线路管理</h3>
+	</div>
+	<div class="modal-body">
+		<table class="table table-bordered">
+			<tbody>
+				<tr>
+				  <td align="right">联系人</td>
+				  <td align="left"><input name="manTextBox" type="text" id="manTextBox" class="span1-1" /></td>
+				  <td align="right">电话:</td>
+				  <td align="left" colspan="3"><input name="phoneTextBox" type="text" id="phoneTextBox" class="span1-1" /></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-info" data-dismiss="modal" aria-hidden="true" style="width:80px">保存</button> 
+		<button class="btn btn-info" data-dismiss="modal" aria-hidden="true" style="width:80px">取消</button> 
+	</div>
+</div>
+  
+  
 </body>

@@ -1,26 +1,8 @@
  $(function(){
-	$("#getPassengers").click(function(){
-		dialog.tip.work({type:'loading',  content : '正在努力加载数据，请稍后...', lock : true, timer:0});
-		if($(".modal-title").html()!="用户信息"){
-			$.ajax({
-				type : "POST",
-				url : path+"/index/passengers",
-				dataType : "html",
-				success : function(data) {
-					dialog.tip.remove();
-					$(".modal-title").html("用户信息");
-					$(".modal-body").html(data);
-					$('#myModal').modal('show');
-				}
-			});
-		}else{
-			dialog.tip.remove();
-			$('#myModal').modal('show');
-		}
-	});
 	$("#loginbutton").click(function(){
 		login();
 	});
+	
 	$("#search").click(function(){
 		var fromStation=$("#fromStation").val();
 		if(fromStation==""){
@@ -37,19 +19,8 @@
 		setCookie("fromStationText",$("#fromStationText").val(),60);
 		setCookie("toStation",toStation,60);
 		setCookie("toStationText",$("#toStationText").val(),60);
-		/*var data={toStation:toStation,fromStation:fromStation,startDate:startDate};
-		dialog.tip.work({type:'loading',  content : '正在努力加载数据，请稍后...', lock : true, timer:0});
-		$.ajax({
-			type : "POST",
-			url : path+"/index/query.do",
-			dataType : "html",
-			data : data,
-			success : function(data) {
-				dialog.tip.remove();
-				$("#train").html(data);
-			}
-		});*/
 	});
+	
 	$("#checkbox_All").click(function(){
 		if($(this).is(':checked')){
 			$("input[name=cc_type]").prop("checked","checked");
@@ -57,6 +28,7 @@
 			$("input[name=cc_type]").removeProp("checked");
 		}
 	});
+	
 	var tbody="";
 	$("input[name=cc_type]").click(function(){
 		if(tbody!="")
@@ -78,6 +50,7 @@
 		}
 		$("#tbody").html(html);
 	});
+	
 	$("#myModal").on("hide.bs.modal", function () {
 		flag=true;
 	});
@@ -93,4 +66,72 @@
 			$(this).val("播放")
 		}
 	})
+	
+	//登录
+	$("#loginBtn").click(function(){
+		var user_name = $.trim($("#user_name").val());
+		var password = $.trim($("#password").val());
+		if(user_name == null || user_name == ''){
+			sysMsg("请输入用户名！");
+			return ;
+		}
+		if(password == null || password == ''){
+			sysMsg("请输入密码！");
+			return ;
+		}
+		
+		var code = "";
+		var hovObj = $(document.getElementById('imgIFrame').contentWindow.document.body).find(".touclick-hov");
+		var imagePosition = $(document.getElementById('imgIFrame').contentWindow.document.body).find("#touclick-image").offset();
+		//console.log(imagePosition);
+		hovObj.each(function(){
+			//console.log($(this).attr("left"));
+			//console.log($(this).attr("top"));
+			var left = parseInt($(this).attr("left")) + 3 - parseInt(imagePosition.left);
+			var top = parseInt($(this).attr("top")) - 16 - parseInt(imagePosition.top);
+			code += "," + left + "," + top;
+		})
+		code = code.substring(1);
+		var data = {randCode:code};
+		//console.log(data);
+		$.ajax({
+			type : "GET",
+			isTakeParam: false,
+			dataType: "json",
+			crossDomain: true,
+			beforeSend: function(k) {
+                k.setRequestHeader("If-Modified-Since", "0");
+                k.setRequestHeader("Cache-Control", "no-cache")
+            },
+        	data: data,
+			url : path + "/index/checkRandCodeAnsyn.do",
+			success : function(data) {
+				if(data.data.msg == 'TRUE' && data.data.result == 1){
+					 $.ajax({
+							type : "GET",
+							isTakeParam: false,
+							dataType: "json",
+							crossDomain: true,
+			            	data: {randCode:code, user_name:user_name, password:password},
+							url : path + "/index/loginAysnSuggest.do",
+							success : function(result) {
+								sysAlert(result.respMsg);
+								if(result.respCode == 0){
+									setCookie("user_name", user_name, 15);
+									setCookie("uName", result.data, 15);
+									setCookie("password", password, 15);
+									location.href = path + "/index/query.do";
+								}else{
+									$("#imgIFrame").attr("src", path + "/index/img.do");
+								}
+							}
+						});
+				}else{
+					sysMsg("验证码错误！");
+					$("#imgIFrame").attr("src", path + "/index/img.do");
+				}
+			}
+		});
+			
+	});
 })
