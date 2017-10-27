@@ -58,7 +58,7 @@
 			<tr>
 				<td align="right" bgcolor="#f1f1f1">车次类型：</td>
 				<td style="padding: 0 0 0 0;">
-					<table class="margin-bottom-0 table no-border" style="border: 1px solid #dddddd;">
+					<table class="margin-bottom-0 table no-border" style="width: 450px;">
 						<tr>
 							<td><label ><input name="cc_type" checked="checked" type="checkbox" class="check" id="checkbox_All"/>全部</label></td>
 							<td><label ><input name="cc_type" checked="checked" value="G" type="checkbox" class="check" id="checkbox_OFp57OqnbA"/>GC-高铁/城际</label></td>
