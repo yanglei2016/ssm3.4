@@ -89,7 +89,7 @@ public class HttpClientUtil{
 	 * @throws HttpProcessException 
 	 */
 	public static String get(HttpClient client, String url, Header[] headers, HttpContext context, String encoding) throws HttpProcessException {
-		return get(HttpConfig.custom().client(client).url(url).headers(headers).context(context).encoding(encoding));
+		return get(HttpConfig.getInstance().client(client).url(url).headers(headers).context(context).encoding(encoding));
 	}
 	/**
 	 * 以Get方式，请求资源或服务
@@ -115,7 +115,7 @@ public class HttpClientUtil{
 	 * @throws HttpProcessException 
 	 */
 	public static String post(HttpClient client, String url, Header[] headers, Map<String,Object>parasMap, HttpContext context, String encoding) throws HttpProcessException {
-		return post(HttpConfig.custom().client(client).url(url).headers(headers).map(parasMap).context(context).encoding(encoding));
+		return post(HttpConfig.getInstance().client(client).url(url).headers(headers).map(parasMap).context(context).encoding(encoding));
 	}
 	/**
 	 * 以Post方式，请求资源或服务
@@ -141,7 +141,7 @@ public class HttpClientUtil{
 	 * @throws HttpProcessException 
 	 */
 	public static String put(HttpClient client, String url, Map<String,Object>parasMap,Header[] headers, HttpContext context,String encoding) throws HttpProcessException {
-		return put(HttpConfig.custom().client(client).url(url).headers(headers).map(parasMap).context(context).encoding(encoding));
+		return put(HttpConfig.getInstance().client(client).url(url).headers(headers).map(parasMap).context(context).encoding(encoding));
 	}
 	/**
 	 * 以Put方式，请求资源或服务
@@ -166,7 +166,7 @@ public class HttpClientUtil{
 	 * @throws HttpProcessException 
 	 */
 	public static String delete(HttpClient client, String url, Header[] headers, HttpContext context,String encoding) throws HttpProcessException {
-		return delete(HttpConfig.custom().client(client).url(url).headers(headers).context(context).encoding(encoding));
+		return delete(HttpConfig.getInstance().client(client).url(url).headers(headers).context(context).encoding(encoding));
 	}
 	/**
 	 * 以Delete方式，请求资源或服务
@@ -192,7 +192,7 @@ public class HttpClientUtil{
 	 * @throws HttpProcessException 
 	 */
 	public static String patch(HttpClient client, String url, Map<String,Object>parasMap, Header[] headers, HttpContext context,String encoding) throws HttpProcessException {
-		return patch(HttpConfig.custom().client(client).url(url).headers(headers).map(parasMap).context(context).encoding(encoding));
+		return patch(HttpConfig.getInstance().client(client).url(url).headers(headers).map(parasMap).context(context).encoding(encoding));
 	}
 	/**
 	 * 以Patch方式，请求资源或服务
@@ -217,7 +217,7 @@ public class HttpClientUtil{
 	 * @throws HttpProcessException 
 	 */
 	public static String head(HttpClient client, String url, Header[] headers, HttpContext context,String encoding) throws HttpProcessException {
-		return head(HttpConfig.custom().client(client).url(url).headers(headers).context(context).encoding(encoding));
+		return head(HttpConfig.getInstance().client(client).url(url).headers(headers).context(context).encoding(encoding));
 	}
 	/**
 	 * 以Head方式，请求资源或服务
@@ -242,7 +242,7 @@ public class HttpClientUtil{
 	 * @throws HttpProcessException 
 	 */
 	public static String options(HttpClient client, String url, Header[] headers, HttpContext context,String encoding) throws HttpProcessException {
-		return options(HttpConfig.custom().client(client).url(url).headers(headers).context(context).encoding(encoding));
+		return options(HttpConfig.getInstance().client(client).url(url).headers(headers).context(context).encoding(encoding));
 	}
 	/**
 	 * 以Options方式，请求资源或服务
@@ -267,7 +267,7 @@ public class HttpClientUtil{
 	 * @throws HttpProcessException 
 	 */
 	public static String trace(HttpClient client, String url, Header[] headers, HttpContext context, String encoding) throws HttpProcessException {
-		return trace(HttpConfig.custom().client(client).url(url).headers(headers).context(context).encoding(encoding));
+		return trace(HttpConfig.getInstance().client(client).url(url).headers(headers).context(context).encoding(encoding));
 	}
 	/**
 	 * 以Trace方式，请求资源或服务
@@ -292,7 +292,7 @@ public class HttpClientUtil{
 	 * @throws HttpProcessException 
 	 */
 	public static OutputStream down(HttpClient client, String url, Header[] headers, HttpContext context, OutputStream out) throws HttpProcessException {
-		return down(HttpConfig.custom().client(client).url(url).headers(headers).context(context).out(out));
+		return down(HttpConfig.getInstance().client(client).url(url).headers(headers).context(context).out(out));
 	}
 	
 	/**
@@ -317,7 +317,7 @@ public class HttpClientUtil{
 	 * @throws HttpProcessException 
 	 */
 	public static String upload(HttpClient client, String url, Header[] headers, HttpContext context) throws HttpProcessException {
-		return upload(HttpConfig.custom().client(client).url(url).headers(headers).context(context));
+		return upload(HttpConfig.getInstance().client(client).url(url).headers(headers).context(context));
 	}
 	
 	/**
@@ -345,7 +345,7 @@ public class HttpClientUtil{
 	 * @throws HttpProcessException 
 	 */
 	public static int status(HttpClient client, String url, Header[] headers, HttpContext context, HttpMethods method) throws HttpProcessException {
-		return status(HttpConfig.custom().client(client).url(url).headers(headers).context(context).method(method));
+		return status(HttpConfig.getInstance().client(client).url(url).headers(headers).context(context).method(method));
 	}
 	
 	/**

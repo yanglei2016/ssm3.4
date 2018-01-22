@@ -78,7 +78,7 @@ public class OCR {
   		
   		String html;
 		try {
-			html = HttpClientUtil.upload(HttpConfig.custom().client(client).url(apiUrl).files(new String[]{imgFilePath},"ocrfile",true).map(getParaMap()));
+			html = HttpClientUtil.upload(HttpConfig.getInstance().client(client).url(apiUrl).files(new String[]{imgFilePath},"ocrfile",true).map(getParaMap()));
 			//System.out.println(html);
 			String[] results = StringUtil.regex("<Result>([^<]*)</Result>\\s*<Status>([^<]*)</Status>", html);
 			if(results.length>0){
@@ -125,7 +125,7 @@ public class OCR {
 		Header[] headers = HttpHeader.custom().userAgent("Mozilla/5.0 (Windows NT 5.1; zh-CN; rv:1.9.1.3) Gecko/20100101 Firefox/8.0").build();
 
 		try {
-			String html = HttpClientUtil.post(HttpConfig.custom().client(client).url(apiUrl).headers(headers).map(map));
+			String html = HttpClientUtil.post(HttpConfig.getInstance().client(client).url(apiUrl).headers(headers).map(map));
 			//System.out.println(html);
 			String[] results = StringUtil.regex("<Result>([^<]*)</Result>\\s*<Status>([^<]*)</Status>", html);
 			if(results.length>0){
@@ -196,7 +196,7 @@ public class OCR {
 		String url2 = "http://59.41.9.91/GZCX/WebUI/Content/Handler/ValidateCode.ashx?0.3271647585525703";
 		String code1 = ocrCode(filePath, 5);
 		String code2 = ocrCode4Net(url,5);
-		String code3 = ocrCode4Net(HttpConfig.custom().url(url2), System.getProperty("user.dir")+System.getProperty("file.separator")+"123.png", 5);
+		String code3 = ocrCode4Net(HttpConfig.getInstance().url(url2), System.getProperty("user.dir")+System.getProperty("file.separator")+"123.png", 5);
 		System.out.println(code1);
 		System.out.println(code2);
 		System.out.println(code3);

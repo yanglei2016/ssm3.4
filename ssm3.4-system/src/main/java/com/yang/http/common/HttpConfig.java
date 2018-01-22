@@ -27,7 +27,7 @@ public class HttpConfig {
 	 * 获取实例
 	 * @return
 	 */
-	public static HttpConfig custom(){
+	public static HttpConfig getInstance(){
 		return new HttpConfig();
 	}
 
