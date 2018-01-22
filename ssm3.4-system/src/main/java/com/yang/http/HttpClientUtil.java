@@ -48,8 +48,8 @@ public class HttpClientUtil{
 	
 	static{
 		try {
-			client4HTTP = HCB.custom().build();
-			client4HTTPS = HCB.custom().ssl().build();
+			client4HTTP = HCB.getInstance().build();
+			client4HTTPS = HCB.getInstance().ssl().build();
 		} catch (HttpProcessException e) {
 			Utils.errorException("创建https协议的HttpClient对象出错：{}", e);
 		}

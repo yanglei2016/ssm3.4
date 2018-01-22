@@ -46,7 +46,7 @@ public class HCB extends HttpClientBuilder {
 	private HCB() {
 	}
 
-	public static HCB custom() {
+	public static HCB getInstance() {
 		return new HCB();
 	}
 

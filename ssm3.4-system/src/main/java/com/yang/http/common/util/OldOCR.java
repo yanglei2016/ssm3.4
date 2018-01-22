@@ -47,7 +47,7 @@ public class OldOCR {
 	private static HttpClient client  =null; //=HCB.custom().proxy("127.0.0.1", 8888).build();
 
 	public static void enableCatch(){
-		client =HCB.custom().proxy("127.0.0.1", 8888).build();
+		client =HCB.getInstance().proxy("127.0.0.1", 8888).build();
 	}
 	public static void unEnableCatch(){
 		client =null;
