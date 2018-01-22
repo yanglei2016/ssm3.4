@@ -1,7 +1,4 @@
  $(function(){
-	$("#loginbutton").click(function(){
-		login();
-	});
 	
 	$("#search").click(function(){
 		var fromStation=$("#fromStation").val();
@@ -63,20 +60,23 @@
 		}else{
 			myAuto.pause();
 			myAuto.currentTime = 0;
-			$(this).val("播放")
+			$(this).val("播放");
 		}
 	})
+	
+	$("#user_name").val(getCookie("user_name"));
+	$("#password").val(getCookie("password"));
 	
 	//登录
 	$("#loginBtn").click(function(){
 		var user_name = $.trim($("#user_name").val());
 		var password = $.trim($("#password").val());
 		if(user_name == null || user_name == ''){
-			sysMsg("请输入用户名！");
+			alert("请输入用户名！");
 			return ;
 		}
 		if(password == null || password == ''){
-			sysMsg("请输入密码！");
+			alert("请输入密码！");
 			return ;
 		}
 		
@@ -115,23 +115,38 @@
 			            	data: {randCode:code, user_name:user_name, password:password},
 							url : path + "/index/loginAysnSuggest.do",
 							success : function(result) {
-								sysAlert(result.respMsg);
 								if(result.respCode == 0){
 									setCookie("user_name", user_name, 15);
 									setCookie("uName", result.data, 15);
 									setCookie("password", password, 15);
 									location.href = path + "/index/query.do";
 								}else{
+									alert(result.respMsg);
 									$("#imgIFrame").attr("src", path + "/index/img.do");
 								}
 							}
 						});
 				}else{
-					sysMsg("验证码错误！");
+					alert("验证码错误！");
 					$("#imgIFrame").attr("src", path + "/index/img.do");
 				}
 			}
 		});
-			
+	});
+	
+	
+	$("#savePassengerBtn").click(function(){
+		var ids = "";
+		$("input[name=passengerIndex]:checkbox:checked").each(function(){
+			ids += "," + $(this).val();
+		});
+		
+		if(ids != null && ids != ''){
+			setCookie("passengerIds", ids.substring(1), 15);
+			$("#passengerSpan").text(ids.substring(1));
+		}else{
+			alert("请选择乘车人！");
+			return ;
+		}
 	});
 })

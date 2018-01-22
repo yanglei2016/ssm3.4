@@ -25,8 +25,8 @@ public class TrainConf {
 			prop = new Properties();
 			String respMsg = "";
 			try {
-				respMsg = new String(HttpsRequestNg.getHttpClient().doGet("https://kyfw.12306.cn/otn/leftTicket/query"), "UTF-8");
-				//logger.info(respMsg);
+				respMsg = new String(HttpsRequestNg.getHttpClient().doGet("https://kyfw.12306.cn/otn/leftTicket/queryZ"), "UTF-8");
+				logger.info("查询路径："+ respMsg);
 			} catch (Exception e) {
 				logger.error("获取查询路径异常", e);
 			}
@@ -36,7 +36,7 @@ public class TrainConf {
 				if (json.containsKey("c_url"))
 					prop.setProperty("query_url", json.getString("c_url"));
 				else
-					prop.setProperty("query_url", "leftTicket/query");
+					prop.setProperty("query_url", "leftTicket/queryZ");
 			} catch (Exception e) {
 				//logger.error("解析查询路径异常", e);
 				logger.info("解析查询路径异常");
@@ -54,7 +54,7 @@ public class TrainConf {
 	// 下单获取签名
 	public final static String initDc = base_url + "confirmPassenger/initDc";
 	// 查询火车票列表
-	public final static String queryUrl = base_url + getProperties().getProperty("query_url", "leftTicket/query") + "?leftTicketDTO.train_date=";
+	public final static String queryUrl = base_url + getProperties().getProperty("query_url", "leftTicket/queryZ") + "?leftTicketDTO.train_date=";
 	// 获取验证码
 	public final static String getPassCodeNewUrl = base_url + "passcodeNew/getPassCodeNew?module=";
 	// 校验验证码

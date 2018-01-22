@@ -422,6 +422,7 @@ public class TrainService {
 		try {
 			String urlStr = TrainConf.queryUrl + startDate + "&leftTicketDTO.from_station=" + fromStation
 					+ "&leftTicketDTO.to_station=" + toStation + "&purpose_codes=ADULT";
+			logger.info("请求路径：{}", urlStr);
 			String resultMsg = new String(HttpsRequestNg.getHttpClient().doGet(urlStr), "UTF-8");
 			logger.info("查询余票返回：{}", resultMsg);
 			
@@ -479,7 +480,8 @@ public class TrainService {
 				}
 			}
 		} catch (Exception e) {
-			logger.error("车次查询失败", e);
+			//logger.error("车次查询失败", e);
+			logger.info("车次查询失败");
 		}
 		return new ArrayList<NewTrain>();
 	}

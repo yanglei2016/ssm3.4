@@ -1,20 +1,16 @@
 function login(){
-	/*dialog.tip.work({type:'loading',  content : '正在努力加载数据，请稍后...', lock : true, timer:0});
-	flag=false;
-	 $.ajax({
+	$.ajax({
 		type : "POST",
-		url : path+"/index/login.do",
+		url : path + "/index/login.do",
 		dataType : "html",
 		success : function(data) {
-			dialog.tip.remove();
-			$(".modal-title").html("登录");
-			$(".modal-body").html(data);
-			$('#myModal').modal('show');
+			$("#loginModal .modal-body").html(data);
+			$('#loginModal').modal('show');
 		},error:function(){
-			dialog.tip.remove();
+			
 		}
-	});*/
-	 location.href = path + "/index/login.do";
+	});
+	//location.href = path + "/index/login.do";
 }
 function checkCode(){
 	dialog.tip.work({type:'loading',  content : '正在努力加载数据，请稍后...', lock : true, timer:0});

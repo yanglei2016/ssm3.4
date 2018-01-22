@@ -16,26 +16,9 @@
 	<form action="query.do" method="post" name="myform" id="myform">
 		<table class="table table-bordered">
 			<tr>
-				<td width="10%" align="right" bgcolor="#f1f1f1">当前用户：</td>
-				<td width="40%" >
+				<td width="30%" align="right" bgcolor="#f1f1f1">当前用户：</td>
+				<td width="70%" >
 					<span id="userNameSpan"></span>
-					&nbsp;&nbsp;&nbsp;&nbsp;
-					<a href="javascript:getPassengers()">获取联系人</a>
-				</td>
-				<td width="50%" align="center" rowspan="4" valign="top">
-					<div style="overflow: scroll;height: 150px;">
-						<table class="table table-bordered">
-							<tr>
-								<td align="center" nowrap="nowrap" bgcolor="#f1f1f1"><strong>序号</strong></td>
-								<td align="center" nowrap="nowrap" bgcolor="#f1f1f1"><strong>姓名</strong></td>
-								<td align="center" nowrap="nowrap" bgcolor="#f1f1f1"><strong>身份证号</strong></td>
-								<td align="center" nowrap="nowrap" bgcolor="#f1f1f1"><strong>旅客类型</strong></td>
-							</tr>
-							<tbody id="passengersTBody">
-								
-							</tbody>
-						</table>
-					</div>
 				</td>
 			</tr>
 			<tr>
@@ -50,7 +33,7 @@
 				<td>
 					<input name="fromStation" id="fromStation" type="text" readonly="readonly" style="width: 50px;"/> <input name="fromStationText"
 					maxlength="15" placeholder="简码/汉字" id="fromStationText" class="input_20txt_gray" type="text" value=""/>
-					<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;至<br/>
+					&nbsp;&nbsp;至&nbsp;&nbsp;
 					<input name="toStation" id="toStation" type="text" readonly="readonly" style="width: 50px;"/> <input name="toStationText" maxlength="15"
 					placeholder="简码/汉字" id="toStationText" class="input_20txt_gray" type="text" />
 				</td>
@@ -71,12 +54,19 @@
 					</table>
 				</td>
 			</tr>
+			<tr>
+				<td width="30%" align="right" bgcolor="#f1f1f1">乘车人：</td>
+				<td width="70%" >
+					<span id="passengerSpan"></span>
+				</td>
+			</tr>
 		</table>
 		<table class="margin-bottom-20 table  no-border">
 			<tr>
 				<td class="text-center">
 					<input type="submit" value="查询" id="search" class="btn btn-info " style="width: 80px;"/>
 					<a class="btn btn-info" id="loginModalBtn" href="${pageContext.request.contextPath}/train/index/login.do" role="button" data-toggle="modal" data-target="#loginModal" style="width: 55px;">登录</a>
+					<a class="btn btn-info" id="passengersModalBtn" href="${pageContext.request.contextPath}/train/index/passengers.do" role="button" data-toggle="modal" data-target="#passengersModal" >常用联系人</a>
 				</td>
 			</tr>
 		</table>
@@ -180,32 +170,43 @@
 		</table>
 	</div>
 </div>
+
+<!-- 常用联系人框 -->
+<div id="passengersModal" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<h3 id="myModalLabel">常用联系人</h3>
+	</div>
+	<div class="modal-body">
+		<table class="table table-bordered">
+			<tbody>
+			</tbody>
+		</table>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-info" data-dismiss="modal" aria-hidden="true" style="width:80px" id="savePassengerBtn">保存</button> 
+		<button class="btn btn-info" data-dismiss="modal" aria-hidden="true" style="width:80px">取消</button> 
+	</div>
+</div>
 	
 <script type="text/javascript">
-
-	var flag = true;
 	function checkUser(){
-		if(flag){
-			$.ajax({
-				type : "POST",
-				url : path + "/index/checkUser.do",
-				dataType : "json",
-				success : function(data) {
-					if(data == false){
-						login();
-						//var myAuto =document.getElementById('myaudio');
-						//myAuto.play();
-					}
-					flag = data;
-				},error:function(){
-					flag = false;
+		$.ajax({
+			type : "POST",
+			url : path + "/index/checkUser.do",
+			dataType : "json",
+			success : function(data) {
+				if(data == false){
+					setCookie("uName", "");
+					$("#loginModalBtn").show();
+					$("#userNameSpan").text("登录超时，请重新登录！");
 				}
-			});
-		}
+			},error:function(){
+			}
+		});
 	}
 	
 	$(function() {
-		//checkUser();
 		$("#fromStation").val(getCookie("fromStation"));
 		$("#fromStationText").val(getCookie("fromStationText"));
 		$("#toStation").val(getCookie("toStation"));
@@ -214,31 +215,17 @@
 		var uName = getCookie("uName");
 		if(uName != null && uName != ''){
 			$("#userNameSpan").text("您好，"+ uName);
+			$("#passengerSpan").text(getCookie("passengerIds"));
 			$("#loginModalBtn").hide();
-// 			getPassengers();
 		}
 		
-		//setInterval(checkUser, 1000 * 60);
+		
+		setInterval(checkUser, 1000 * 10);
 	});
 	
 	//获取联系人
 	function getPassengers(){
-		$.ajax({
-			type : "POST",
-			url : path + "/index/passengers.do",
-			dataType : "json",
-			success : function(result) {
-				//console.log(result);
-				var html = "";
-				$.each(result, function(i, item){
-					html += '<tr><td align="center"><input type="checkbox" value="'+ item.passenger_id_no +'"/>'+ (i + 1) +'</td>'+
-					'<td align="center">'+ item.passenger_name +'</td>'+
-					'<td align="center">'+ item.passenger_id_no +'</td>'+
-					'<td align="center">'+ item.passenger_type_name +'</td></tr>';
-				});
-				$('#passengersTBody').html(html);
-			}
-		});
+		location.href = path + "/index/passengers.do";
 	}
 </script>
 </body>

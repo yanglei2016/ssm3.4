@@ -1,7 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@include file="common_include.jsp" %>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resourcesStyle/train/js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resourcesStyle/train/js/train.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resourcesStyle/train/js/train_utils.js"></script>
 <body>
-  <div class="right" id="mainFrame">
+  <div class="right">
   <div class="right_cont">
   <div style="width:100%; margin:auto">
 		<table class="table table-bordered">
@@ -35,14 +37,4 @@
   </div> 
   </div>
   </div>
-
-
-
-<script type="text/javascript">
-	
-	$(function(){
-		$("#user_name").val(getCookie("user_name"));
-		$("#password").val(getCookie("password"));
-	});
-</script>
 </body>

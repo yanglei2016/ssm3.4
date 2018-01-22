@@ -171,10 +171,12 @@ public class TrainController extends BaseController {
 
 	// 获取乘客信息
 	@RequestMapping("/passengers.do")
-	public void passengers(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public String passengers(Model model, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		List<Passenger> passengers = TrainService.passengers();
 		logger.info("乘客信息返回：{}", GsonUtils.toJsonString(passengers));
-		ResponseUtils.renderHtmlJson(response, GsonUtils.toJsonString(passengers));
+		model.addAttribute("passengersList", passengers);
+//		ResponseUtils.renderHtmlJson(response, GsonUtils.toJsonString(passengers));
+		return "train/passengers";
 	}
 
 	// 检查用户登录是否有效
