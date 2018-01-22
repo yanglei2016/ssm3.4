@@ -37,7 +37,7 @@ public class OldOCR {
 	private static final String apiKey = PropertiesUtil.getProperty("OCR.key");
 	private static final String boundary = "----------------------------OcrKing_Client_Aven_s_Lab";
 	private static final String end="\r\n--" + boundary + "--\r\n";
-	private static final Header[] headers = HttpHeader.custom()
+	private static final Header[] headers = HttpHeader.getInstance()
 																					.accept("text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2")
 																					.userAgent("Mozilla/5.0 (Windows NT 5.1; zh-CN; rv:1.9.1.3) Gecko/20100101 Firefox/8.0")
 																				 	.contentType("multipart/form-data; boundary="+boundary)
@@ -169,7 +169,7 @@ public class OldOCR {
 		Map<String, Object> map = getParaMap();
 		map.put("url", imgUrl);
 		
-		Header[] headers = HttpHeader.custom().userAgent("Mozilla/5.0 (Windows NT 5.1; zh-CN; rv:1.9.1.3) Gecko/20100101 Firefox/8.0").build();
+		Header[] headers = HttpHeader.getInstance().userAgent("Mozilla/5.0 (Windows NT 5.1; zh-CN; rv:1.9.1.3) Gecko/20100101 Firefox/8.0").build();
 
 		try {
 			String html = HttpClientUtil.post(HttpConfig.getInstance().client(client).url(apiUrl).headers(headers).map(map));

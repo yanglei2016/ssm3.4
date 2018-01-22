@@ -23,7 +23,7 @@ public class HttpCookies {
 	 */
 	private CookieStore cookieStore;
 	
-	public static HttpCookies custom(){
+	public static HttpCookies getInstance(){
 		return new HttpCookies();
 	}
 	

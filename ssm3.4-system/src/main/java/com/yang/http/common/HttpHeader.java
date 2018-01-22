@@ -18,7 +18,7 @@ public class HttpHeader {
 
 	private HttpHeader() {};
 
-	public static HttpHeader custom() {
+	public static HttpHeader getInstance() {
 		return new HttpHeader();
 	}
 
