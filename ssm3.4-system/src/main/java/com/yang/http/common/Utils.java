@@ -50,7 +50,7 @@ public class Utils {
 	/**
 	 * 是否开启debug，
 	 */
-	private static boolean debug = false;
+	private static boolean debug = true;
 	private static final Logger logger = Logger.getLogger("HttpClient(异步)工具类");
 
 	/**

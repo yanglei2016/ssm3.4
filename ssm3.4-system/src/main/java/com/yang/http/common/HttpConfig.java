@@ -99,6 +99,19 @@ public class HttpConfig {
 	private static final ThreadLocal<String> urls = new ThreadLocal<String>();
 
 	/**
+	 * 输出编码
+	 */
+	private String logMessage;
+	
+	/**
+	 * HttpClient对象
+	 */
+	public HttpConfig logMessage(String logMessage) {
+		this.logMessage = logMessage;
+		return this;
+	}
+	
+	/**
 	 * HttpClient对象
 	 */
 	public HttpConfig client(HttpClient client) {
@@ -308,4 +321,7 @@ public class HttpConfig {
 		return outs.get();
 	}
 
+	public String logMessage() {
+		return logMessage == null ? "" : logMessage;
+	}
 }
