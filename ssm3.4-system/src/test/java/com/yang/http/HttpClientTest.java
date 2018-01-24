@@ -1,12 +1,11 @@
 package com.yang.http;
 
-import org.apache.http.Header;
-import org.apache.http.client.HttpClient;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.Test;
 
-import com.yang.http.builder.HCB;
 import com.yang.http.common.HttpConfig;
-import com.yang.http.common.HttpHeader;
 import com.yang.http.exception.HttpProcessException;
 
 public class HttpClientTest extends BaseTest {
@@ -23,29 +22,25 @@ public class HttpClientTest extends BaseTest {
 	
 	
 	@Test
-	public void postTest() throws HttpProcessException {
+	public void postTest(){
+		String logMessage = "根据手机号查询会员详情";
 		String url = "http://10.91.138.100:54030/los/zuche-intf-route-rent.SAORoute";
+		String paramJson = "{\"sign\":\"b3d39bf588ec11d36c02f04d756913d1\",\"params\":{\"phone\":\"18813953815\"},\"bizNo\":\"zuche-customer-user.findUserByMobilePhone\",\"_channel_id\":\"30\"}";
 		
-		Header[] header = HttpHeader.getInstance()
-				.contentType("application/json")
-				.accept("*/*")
-				.build();
-		
-		HttpClient httpClient = HCB.getInstance().timeout(5000).build();
-		String json = "{\"sign\":\"b3d39bf588ec11d36c02f04d756913d1\",\"params\":{\"phone\":\"18813953815\"},\"bizNo\":\"zuche-customer-user.findUserByMobilePhone\",\"_channel_id\":\"30\"}";
-		
-		HttpConfig httpConfig = HttpConfig.getInstance()
-				.logMessage("根据手机号查询会员详情")
-				.url(url)
-				.headers(header)
-				.client(httpClient)
-				.json(json)
-				.encoding("utf-8");
-		
-		String resultMsg = HttpClientUtil.post(httpConfig);
-		
+		HttpRequest.sendPost(url, paramJson, logMessage);
 	}
 	
 	
+	@Test
+	public void postMapTest() {
+		String logMessage = "分时租赁-订单反馈";
+		String url = "http://218.17.205.131:54018/ldy-gateway/ldy/httpSeviceHandler.do";
+		
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("params", "{\"sign\":\"CD4C6BFCCC639834E71B8B2EE9C2E1D3\",\"startTime\":1516579200,\"rowIndex\":1,\"pageSize\":100,\"endTime\":1516752000}");
+		paramMap.put("servicePath", "/ldy-mgt/crm/customer/queryCustomerFeedback.do");
+		
+		HttpRequest.sendPost(url, paramMap, logMessage);
+	}
 	
 }
