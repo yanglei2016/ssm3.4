@@ -60,6 +60,10 @@ public class HCB extends HttpClientBuilder {
 	public HCB timeout(int timeout) {
 		return timeout(timeout, true);
 	}
+	
+	public HCB timeout(int connectTimeout, int connectionRequestTimeout,int socketTimeout){
+		return timeout(connectTimeout, connectionRequestTimeout, socketTimeout, true);
+	}
 
 	/**
 	 * 设置超时时间以及是否允许网页重定向（自动跳转 302）
@@ -76,6 +80,27 @@ public class HCB extends HttpClientBuilder {
 				.setConnectionRequestTimeout(timeout)
 				.setConnectTimeout(timeout).setSocketTimeout(timeout)
 				.setRedirectsEnabled(redirectEnable).build();
+		return (HCB) this.setDefaultRequestConfig(config);
+	}
+	
+	/**
+	 *
+	 * @param connectTimeout 设置连接超时时间，单位毫秒
+	 * @param connectionRequestTimeout 设置从connect Manager获取Connection 超时时间，单位毫秒。这个属性是新加的属性，因为目前版本是可以共享连接池的。
+	 * @param socketTimeout 请求获取数据的超时时间，单位毫秒。 如果访问一个接口，多少时间内无法返回数据，就直接放弃此次调用。
+	 * @param redirectEnable
+	 * setStaleConnectionCheckEnabled //设置true后每次使用连接池中的链接会先检查下链接是否可用；虽然可能会消耗15-30ms，但是这个应该比tcp握手来的快。
+	 * @return
+	 */
+	public HCB timeout(int connectTimeout, int connectionRequestTimeout,int socketTimeout,boolean redirectEnable){
+		// 配置请求的超时设置
+		RequestConfig config = RequestConfig.custom()
+				.setConnectionRequestTimeout(connectionRequestTimeout)
+				.setConnectTimeout(connectTimeout)
+				.setSocketTimeout(socketTimeout)
+				.setRedirectsEnabled(redirectEnable)
+				.setStaleConnectionCheckEnabled(true)
+				.build();
 		return (HCB) this.setDefaultRequestConfig(config);
 	}
 

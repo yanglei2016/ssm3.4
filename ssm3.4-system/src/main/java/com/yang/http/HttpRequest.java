@@ -26,7 +26,7 @@ public class HttpRequest {
 				.accept("*/*")
 				.build();
 		
-		HttpClient httpClient = HCB.getInstance().timeout(5000).build();
+		HttpClient httpClient = HCB.getInstance().timeout(5000, 1000, 20000).build();
 		
 		HttpConfig httpConfig = HttpConfig.getInstance()
 				.logMessage(logMessage)
@@ -50,7 +50,7 @@ public class HttpRequest {
 				.accept("*/*")
 				.build();
 		
-		HttpClient httpClient = HCB.getInstance().timeout(5000).build();
+		HttpClient httpClient = HCB.getInstance().timeout(5000, 1000, 20000).build();
 		
 		HttpConfig httpConfig = HttpConfig.getInstance()
 				.logMessage(logMessage)
