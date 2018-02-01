@@ -1,10 +1,12 @@
 package com.yang.http;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
 
+import com.yang.common.tools.MD5Util;
 import com.yang.http.common.HttpConfig;
 import com.yang.http.exception.HttpProcessException;
 
@@ -42,5 +44,70 @@ public class HttpClientTest extends BaseTest {
 		
 		HttpRequest.sendPost(url, paramMap, logMessage);
 	}
+	
+	
+	
+	private static final String APP_KEY = "dc2b7e0a8f7abd7a50f3a3ca60ad8a15";
+	private static final String APP_SECRET = "xiMqxH";
+	
+	@Test
+	public void callTest(){
+		String logMessage = "米糠云-示忙/示闲";
+		//String url = "http://api.mixcaller.com/v3/?m=interfaces&c=cti&a=index&act=setdnd&appkey=74349f03b46e48df2b41aa60791c1a71&sign=552880952ce7090f35636f86f12e49f8&time=1450159763&extension=80001&dnd=3";
+		String act = "setdnd";
+		String extension = "50901";
+		String dnd = "0";
+		String validateStr = "interfaces" + "cti" + act + extension + dnd;
+		
+		String time = String.valueOf(new Date().getTime() / 1000);
+		String sign = MD5Util.md5(APP_KEY + validateStr + APP_SECRET + time);
+		sign = sign.toLowerCase();
+		String url = "http://api.mixcaller.com/v3/?m=interfaces&c=cti&a=index&act="+ act +"&appkey="+ APP_KEY +"&sign="+ sign +"&time="+ time +"&extension="+ extension +"&dnd="+ dnd;
+		
+		HttpRequest.sendGet(url, logMessage);
+	}
+	
+	@Test
+	public void callStatusTest(){
+		String logMessage = "米糠云-获取分机状态";
+		//String url = "http://api.mixcaller.com/v3/?m=interfaces&c=cti&a=index&act=setdnd&appkey=74349f03b46e48df2b41aa60791c1a71&sign=552880952ce7090f35636f86f12e49f8&time=1450159763&extension=80001&dnd=3";
+		String act = "extenstatus";
+		String extension = "80001";
+		String validateStr = "interfaces" + "cti" + act + extension;
+		
+		String time = String.valueOf(new Date().getTime() / 1000);
+		String sign = MD5Util.md5(APP_KEY + validateStr + APP_SECRET + time);
+		sign = sign.toLowerCase();
+		
+		String url = "http://api.mixcaller.com/v3/?m=interfaces&c=cti&a=index&act="+ act +"&appkey="+ APP_KEY +"&sign="+ sign +"&time="+ time +"&extension="+ extension;
+		
+		HttpRequest.sendGet(url, logMessage);
+	}
+	
+	
+	@Test
+	public void popScreenTest(){
+		String logMessage = "米糠云-获取分机状态";
+		//String url = "http://api.mixcaller.com/v3/?m=interfaces&c=cti&a=index&act=popscreen&appkey=6fec5b9c7f3d*********c0b89af84d&sign=eca8e40f7da8afabdf4ce20b71f4ab3f&time=1480661730&extension=80001&open_type=2&mixcallback=yourJsFunction";
+		String act = "popscreen";
+		String extension = "80001";
+		String open_type = "2";
+		String mixcallback = "functionName";
+		
+		
+		String validateStr = "interfaces" + "cti" + act + extension;
+		
+		String time = String.valueOf(new Date().getTime() / 1000);
+		String sign = MD5Util.md5(APP_KEY + validateStr + APP_SECRET + time);
+		sign = sign.toLowerCase();
+		
+		String url = "http://api.mixcaller.com/v3/?m=interfaces&c=cti&a=index&act="+ act 
+				+"&appkey="+ APP_KEY +"&sign="+ sign +"&time="+ time +"&extension="+ extension 
+				+"&open_type="+ open_type +"&mixcallback="+ mixcallback;
+		
+		HttpRequest.sendGet(url, logMessage);
+	}
+	
+	
 	
 }

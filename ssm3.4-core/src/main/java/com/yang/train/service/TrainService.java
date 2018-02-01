@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.yang.common.vo.ResponseVo;
+import com.yang.train.ImageUtils;
 import com.yang.train.conf.TrainConf;
 import com.yang.train.entity.NewTrain;
 import com.yang.train.entity.Passenger;
@@ -407,7 +408,10 @@ public class TrainService {
 		String urlStr = TrainConf.getPassCodeNewUrl + module;
 		urlStr += "login".equals(module) ? "&rand=sjrand&" : "&rand=randp&";
 		urlStr += Math.random();
+		System.out.println("-----------urlStr---------:"+ urlStr);
 		byte[] doGet = HttpsRequestNg.getHttpClient().doGet(urlStr);
+		
+		ImageUtils.generateImage(ImageUtils.getBase64Image(doGet), "123.jpg");
 		return doGet;
 	}
 

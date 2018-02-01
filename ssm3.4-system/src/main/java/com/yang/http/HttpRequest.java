@@ -50,7 +50,7 @@ public class HttpRequest {
 				.accept("*/*")
 				.build();
 		
-		HttpClient httpClient = HCB.getInstance().timeout(5000, 1000, 20000).build();
+		HttpClient httpClient = HCB.getInstance().timeout(5000, 1000, 200000).build();
 		
 		HttpConfig httpConfig = HttpConfig.getInstance()
 				.logMessage(logMessage)
@@ -63,6 +63,51 @@ public class HttpRequest {
 		String resultMsg = "";
 		try {
 			resultMsg = HttpClientUtil.post(httpConfig);
+		} catch (HttpProcessException e) {
+			logger.error("http请求异常", e);
+		}
+		return resultMsg;
+	}
+	
+	public static String sendGet(String url, String logMessage){
+		Header[] header = HttpHeader.getInstance()
+				.contentType("application/json")
+				.accept("application/json")
+				.build();
+		
+		HttpClient httpClient = HCB.getInstance().timeout(5000, 1000, 20000).build();
+		
+		HttpConfig httpConfig = HttpConfig.getInstance()
+				.logMessage(logMessage)
+				.url(url)
+				.headers(header)
+				.client(httpClient)
+				.encoding("utf-8");
+		
+		String resultMsg = "";
+		try {
+			resultMsg = HttpClientUtil.get(httpConfig);
+		} catch (HttpProcessException e) {
+			logger.error("http请求异常", e);
+		}
+		return resultMsg;
+	}
+	
+	public static byte[] sendGetByteArray(String url, String logMessage){
+		Header[] header = HttpHeader.getInstance().build();
+		
+		HttpClient httpClient = HCB.getInstance().timeout(5000, 1000, 20000).build();
+		
+		HttpConfig httpConfig = HttpConfig.getInstance()
+				.logMessage(logMessage)
+				.url(url)
+				.headers(header)
+				.client(httpClient)
+				.encoding("utf-8");
+		
+		byte[] resultMsg = null;
+		try {
+			resultMsg = HttpClientUtil.getByteArray(httpConfig);
 		} catch (HttpProcessException e) {
 			logger.error("http请求异常", e);
 		}

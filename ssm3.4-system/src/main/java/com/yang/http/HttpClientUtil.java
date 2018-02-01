@@ -103,6 +103,17 @@ public class HttpClientUtil{
 	}
 	
 	/**
+	 * 以Get方式，请求资源或服务
+	 * 
+	 * @param config		请求参数配置
+	 * @return
+	 * @throws HttpProcessException
+	 */
+	public static byte[] getByteArray(HttpConfig config) throws HttpProcessException {
+		return sendByteArray(config.method(HttpMethods.GET));
+	}
+	
+	/**
 	 * 以Post方式，请求资源或服务
 	 * 
 	 * @param client				client对象
@@ -378,6 +389,17 @@ public class HttpClientUtil{
 	 * 请求资源或服务
 	 * 
 	 * @param config		请求参数配置
+	 * @return
+	 * @throws HttpProcessException
+	 */
+	public static byte[] sendByteArray(HttpConfig config) throws HttpProcessException {
+		return fmt2ByteArray(execute(config), config.outenc(), config.logMessage());
+	}
+	
+	/**
+	 * 请求资源或服务
+	 * 
+	 * @param config		请求参数配置
 	 * @return				返回HttpResponse对象
 	 * @throws HttpProcessException 
 	 */
@@ -407,16 +429,16 @@ public class HttpClientUtil{
 				
 				Utils.info(logMessage +" - 请求地址："+config.url());
 				if(nvps.size()>0){
-					Utils.info(logMessage +" - 请求参数："+nvps.toString());
+					//Utils.info(logMessage +" - 请求参数："+nvps.toString());
 				}
 				if(config.json()!=null){
-					Utils.info(logMessage +" - 请求参数："+config.json());
+					//Utils.info(logMessage +" - 请求参数："+config.json());
 				}
 			}else{
 				int idx = config.url().indexOf("?");
 				Utils.info(logMessage +" - 请求地址："+config.url().substring(0, (idx>0 ? idx : config.url().length())));
 				if(idx>0){
-					Utils.info(logMessage +" - 请求参数："+config.url().substring(idx+1));
+					//Utils.info(logMessage +" - 请求参数："+config.url().substring(idx+1));
 				}
 			}
 			//执行请求操作，并拿到结果（同步阻塞）
@@ -456,6 +478,23 @@ public class HttpClientUtil{
 				Utils.info(logMessage +" - 返回结果："+body);
 			}else{//有可能是head请求
 				body =resp.getStatusLine().toString();
+			}
+			EntityUtils.consume(resp.getEntity());
+		} catch (IOException e) {
+			throw new HttpProcessException(e);
+		}finally{			
+			close(resp);
+		}
+		return body;
+	}
+	
+	private static byte[] fmt2ByteArray(HttpResponse resp, String encoding, String logMessage) throws HttpProcessException {
+		byte[] body = null;
+		try {
+			if (resp.getEntity() != null) {
+				// 按指定编码转换结果实体为String类型
+				body = EntityUtils.toByteArray(resp.getEntity());
+				Utils.info(logMessage +" - 返回结果："+body);
 			}
 			EntityUtils.consume(resp.getEntity());
 		} catch (IOException e) {
