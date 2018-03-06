@@ -79,7 +79,8 @@ public class DamatuTest extends BaseTest {
 	public byte[] getImageByte(){
 		String logMessage = "12306-获取验证码图片";
 		// https://kyfw.12306.cn/otn/passcodeNew/getPassCodeNew?module=login&rand=sjrand&0.8087829747479774
-		String url = "https://kyfw.12306.cn/otn/passcodeNew/getPassCodeNew?module=login&rand=sjrand&"+ Math.random();
+		//String url = "https://kyfw.12306.cn/otn/passcodeNew/getPassCodeNew?module=login&rand=sjrand&"+ Math.random();
+		String url = "https://kyfw.12306.cn/passport/captcha/captcha-image?login_site=E&module=login&rand=sjrand&"+ Math.random();
 		
 		byte[] result = HttpRequest.sendGetByteArray(url, logMessage);
 		

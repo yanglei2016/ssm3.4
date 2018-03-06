@@ -429,16 +429,16 @@ public class HttpClientUtil{
 				
 				Utils.info(logMessage +" - 请求地址："+config.url());
 				if(nvps.size()>0){
-					//Utils.info(logMessage +" - 请求参数："+nvps.toString());
+					Utils.info(logMessage +" - 请求参数："+nvps.toString());
 				}
 				if(config.json()!=null){
-					//Utils.info(logMessage +" - 请求参数："+config.json());
+					Utils.info(logMessage +" - 请求参数："+config.json());
 				}
 			}else{
 				int idx = config.url().indexOf("?");
 				Utils.info(logMessage +" - 请求地址："+config.url().substring(0, (idx>0 ? idx : config.url().length())));
 				if(idx>0){
-					//Utils.info(logMessage +" - 请求参数："+config.url().substring(idx+1));
+					Utils.info(logMessage +" - 请求参数："+config.url().substring(idx+1));
 				}
 			}
 			//执行请求操作，并拿到结果（同步阻塞）
