@@ -60,7 +60,7 @@ public class PushConsumer {
 
 				return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 
-			}
+			}  
 		});
 
 		/**
